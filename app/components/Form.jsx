@@ -1,10 +1,11 @@
 "use client";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Select from "react-select";
 import makeAnimated from "react-select/animated";
 import { CiCircleMinus, CiCirclePlus } from "react-icons/ci";
 
 const animatedComponents = makeAnimated();
+
 const Form = () => {
   const SizeOptions = [
     { value: "M", label: "M" },
@@ -15,13 +16,23 @@ const Form = () => {
   const Price = 999;
   const [totalPrice, setPrice] = useState(Price);
   const [totalTicket, setTotalTicket] = useState(1);
+  const [formArr, setFormArr] = useState([1]);
 
   const handleMinusTicket = () => {
     setTotalTicket((p) => (p > 1 ? p - 1 : p));
+    if (totalTicket !== 1) {
+      setFormArr(formArr.slice(0, -1));
+    }
   };
   const handlePlusTicket = () => {
     setTotalTicket((p) => p + 1);
+    setFormArr([...formArr, 1]);
   };
+
+  useEffect(() => {
+    setPrice(Price * totalTicket);
+  }, [totalTicket]);
+
 
   return (
     <div className="max-w-[800px] mx-auto py-10 flex flex-col items-center justify-center">
@@ -50,9 +61,9 @@ const Form = () => {
 
         <div className="text-gray-600">
           <span className="text-lg font-medium text-black">
-            Terms & Conditions: 
-          </span>
-           {' '}Once bought, no monetary refunds will be given. You can only transfer
+            Terms & Conditions:
+          </span>{" "}
+          Once bought, no monetary refunds will be given. You can only transfer
           the ticket to another person. You must inform the recipient of details
           to the organizing team by writing an email to the organizing team.
         </div>
@@ -68,9 +79,7 @@ const Form = () => {
         </div>
 
         <div className="flex justify-between">
-          <span className="text-2xl font-medium">
-            Rs. {totalTicket * Price}
-          </span>
+          <span className="text-2xl font-medium">Rs. {totalPrice}</span>
           <div className="flex gap-3 items-center">
             <span className=" cursor-pointer" onClick={handleMinusTicket}>
               <CiCircleMinus size={"2.8em"} />
@@ -83,76 +92,81 @@ const Form = () => {
         </div>
       </div>
 
-      <div className="w-[800px] py-6 px-8 rounded-b-xl flex flex-col gap-5 border pb-10">
-        <div className="flex w-full gap-5">
-          <div className=" flex flex-col w-1/2 gap-2">
-            <label htmlFor="name" className="label">
-              Full Name*
-            </label>
-            <input
-              type="text"
-              id="name"
-              name="name"
-              className="outline-none border px-4 py-1.5 rounded bg-light-white focus:bg-gray-100 duration-300 transition-all ease-in "
-            />
+      {formArr.map((i, index) => (
+        <form className="w-[800px] py-6 px-8 rounded-b-xl flex flex-col gap-5 border pb-10">
+          <h1 className="text-sm font-sans leading-relaxed font-medium pb-6">
+            General Registration ({index + 1}/{totalTicket})
+          </h1>
+          <div className="flex w-full gap-5">
+            <div className=" flex flex-col w-1/2 gap-2">
+              <label htmlFor="name" className="label">
+                Full Name*
+              </label>
+              <input
+                type="text"
+                id="name"
+                name="name"
+                className="outline-none focus:border-blue focus:border border px-4 py-1.5 rounded bg-light-white focus:bg-gray-100  ease-in "
+              />
+            </div>
+            <div className=" flex flex-col w-1/2  gap-2">
+              <label htmlFor="email" className="label">
+                Email Address*
+              </label>
+              <input
+                type="email"
+                id="email"
+                name="email"
+                placeholder="example@gmail.com"
+                className="outline-none border focus:border-blue px-4 py-1.5 rounded bg-light-white focus:bg-gray-100 duration-300 transition-all ease-in "
+              />
+            </div>
           </div>
-          <div className=" flex flex-col w-1/2  gap-2">
-            <label htmlFor="email" className="label">
-              Email Address*
-            </label>
-            <input
-              type="email"
-              id="email"
-              name="email"
-              placeholder="example@gmail.com"
-              className="outline-none border  px-4 py-1.5 rounded bg-light-white focus:bg-gray-100 duration-300 transition-all ease-in "
-            />
+          <div className="flex w-full gap-5">
+            <div className=" flex flex-col w-1/2  gap-2">
+              <label htmlFor="number" className="label">
+                Mobile Number*
+              </label>
+              <input
+                type="number"
+                id="number"
+                name="number"
+                className="outline-none border focus:border-blue px-4 py-1.5 rounded bg-light-white focus:bg-gray-100 duration-300 transition-all ease-in "
+              />
+            </div>
+            <div className=" flex flex-col w-1/2  gap-2 ">
+              <label htmlFor="city" className="label">
+                City & State*
+              </label>
+              <input
+                type="text"
+                id="city"
+                name="city"
+                className="outline-none border focus:border-blue px-4 py-1.5 rounded bg-light-white focus:bg-gray-100 duration-300 transition-all ease-in "
+              />
+            </div>
           </div>
-        </div>
-        <div className="flex w-full gap-5">
-          <div className=" flex flex-col w-1/2  gap-2">
-            <label htmlFor="number" className="label">
-              Mobile Number*
-            </label>
-            <input
-              type="number"
-              id="number"
-              name="number"
-              className="outline-none border  px-4 py-1.5 rounded bg-light-white focus:bg-gray-100 duration-300 transition-all ease-in "
-            />
+          <div className="w-full flex gap-5">
+            <div className="flex flex-col w-1/2  gap-2 ">
+              <label htmlFor="organization" className="label">
+                Organization*
+              </label>
+              <input
+                type="text"
+                id="organization"
+                name="organization"
+                className="outline-none border focus:border-blue px-4 py-1.5 rounded bg-light-white focus:bg-gray-100 duration-300 transition-all ease-in "
+              />
+            </div>
+            <div className=" flex flex-col w-1/2  gap-2">
+              <label htmlFor="designation" className="label">
+                T-shirt Size*
+              </label>
+              <Select options={SizeOptions} components={animatedComponents}/>
+            </div>
           </div>
-          <div className=" flex flex-col w-1/2  gap-2 ">
-            <label htmlFor="city" className="label">
-              City & State*
-            </label>
-            <input
-              type="text"
-              id="city"
-              name="city"
-              className="outline-none border px-4 py-1.5 rounded bg-light-white focus:bg-gray-100 duration-300 transition-all ease-in "
-            />
-          </div>
-        </div>
-        <div className="w-full flex gap-5">
-          <div className="flex flex-col w-1/2  gap-2 ">
-            <label htmlFor="organization" className="label">
-              Organization*
-            </label>
-            <input
-              type="text"
-              id="organization"
-              name="organization"
-              className="outline-none border  px-4 py-1.5 rounded bg-light-white focus:bg-gray-100 duration-300 transition-all ease-in "
-            />
-          </div>
-          <div className=" flex flex-col w-1/2  gap-2">
-            <label htmlFor="designation" className="label">
-              T-shirt Size*
-            </label>
-            <Select options={SizeOptions} components={animatedComponents} />
-          </div>
-        </div>
-      </div>
+        </form>
+      ))}
 
       <div className="mt-20 flex justify-end w-full px-10">
         <button className="w-fit bg-pink text-white px-8 text-xl font-medium py-3 rounded">
